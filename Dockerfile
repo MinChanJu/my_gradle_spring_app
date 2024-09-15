@@ -1,30 +1,34 @@
 # OpenJDK 21 기반 이미지 사용
 FROM openjdk:21-jdk-slim AS build
 
-# 필요한 패키지 목록을 업데이트하고 Python과 gcc 설치
-RUN apt-get update && apt-get install -y python3 python3-pip gcc curl unzip && rm -rf /var/lib/apt/lists/*
-
-# Gradle 설치
-ARG GRADLE_VERSION=7.6
-RUN curl -sL https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip -o gradle.zip \
-    && unzip gradle.zip -d /opt \
-    && rm gradle.zip \
-    && ln -s /opt/gradle-${GRADLE_VERSION}/bin/gradle /usr/bin/gradle
-
-# 애플리케이션 소스 복사
+# 작업 디렉토리 설정
 WORKDIR /app
+
+# 필요한 패키지 목록을 업데이트하고 Python과 gcc 설치
+RUN apt-get update && apt-get install -y python3 python3-pip gcc && rm -rf /var/lib/apt/lists/*
+
+# Gradle Wrapper와 필요한 파일 복사
+COPY gradlew ./
+COPY gradle/ gradle/
+COPY build.gradle.kts .
+COPY settings.gradle.kts .
+
+# 의존성 캐시를 위해 Gradle 빌드 스크립트만 복사하고 의존성 다운로드
+RUN ./gradlew --no-daemon build -x test
+
+# 모든 소스 코드 복사
 COPY . .
 
-# 애플리케이션 빌드
-RUN gradle build --no-daemon
+# 프로젝트 빌드
+RUN ./gradlew --no-daemon build
 
-# 실행 단계용 이미지
+# 실행을 위한 새로운 베이스 이미지 사용
 FROM openjdk:21-jdk-slim
 
 # 환경 변수 설정 (기본값)
 ENV SPRING_PROFILES_ACTIVE=prod
 
-# 빌드한 JAR 파일을 실행 이미지에 복사
+# 빌드된 JAR 파일을 복사
 COPY --from=build /app/build/libs/*.jar app.jar
 
 # 애플리케이션 실행
