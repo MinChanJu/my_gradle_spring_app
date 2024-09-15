@@ -11,6 +11,8 @@ ENV SPRING_PROFILES_ACTIVE=prod
 RUN apt-get update && apt-get install -y python3 python3-pip gcc && rm -rf /var/lib/apt/lists/*
 
 # Gradle Wrapper 및 관련 파일 복사
+COPY build.gradle .
+COPY settings.gradle .
 COPY gradlew ./
 COPY gradle/ ./gradle/
 
