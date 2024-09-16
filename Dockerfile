@@ -26,7 +26,7 @@ RUN ./gradlew build -x test
 RUN ls build/libs/
 
 # 애플리케이션 JAR 파일을 컨테이너로 복사
-COPY build/libs/*.jar app.jar
+COPY build/libs/my_gradle_spring_app-0.0.1-SNAPSHOT.jar app.jar
 
 # 환경 변수 설정
 ENV SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
