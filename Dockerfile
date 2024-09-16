@@ -17,7 +17,7 @@ COPY gradle/ ./gradle/
 COPY src/ ./src/
 
 # Gradle 빌드 실행 (테스트 건너뛰기)
-RUN ./gradlew build -x test
+RUN ./gradlew clean build -x test
 
 # 빌드된 JAR 파일 경로 확인
 RUN ls build/libs/
