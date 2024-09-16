@@ -22,9 +22,11 @@ COPY src/ ./src/
 # Gradle 빌드 실행 (테스트 건너뛰기)
 RUN ./gradlew build -x test
 
+# 빌드된 JAR 파일 경로 확인
+RUN ls build/libs/
+
 # 애플리케이션 JAR 파일을 컨테이너로 복사
-ARG JAR_FILE=build/libs/*.jar
-COPY ${JAR_FILE} app.jar
+COPY build/libs/*.jar app.jar
 
 # 환경 변수 설정
 ENV SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
