@@ -15,8 +15,8 @@ RUN ./gradlew bootJar -x test
 # 빌드된 JAR 파일 경로 확인
 RUN ls build/libs/
 
-# 빌드된 JAR 파일을 올바르게 복사 (경로를 명확히 지정)
-RUN cp build/libs/*.jar app.jar
+# 빌드된 JAR 파일을 컨테이너의 루트로 복사
+RUN cp build/libs/*.jar /app/app.jar
 
 # 애플리케이션 실행
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
