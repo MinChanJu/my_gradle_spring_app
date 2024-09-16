@@ -13,9 +13,6 @@ COPY settings.gradle .
 COPY gradlew ./
 COPY gradle/ ./gradle/
 
-# Gradle Wrapper에 실행 권한 추가
-RUN chmod +x gradlew
-
 # 프로젝트 소스 복사
 COPY src/ ./src/
 
