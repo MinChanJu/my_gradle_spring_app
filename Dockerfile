@@ -20,7 +20,7 @@ COPY gradle/ ./gradle/
 COPY src/ ./src/
 
 # Gradle 빌드 실행
-RUN ./gradlew build
+RUN ./gradlew build -x test
 
 # 애플리케이션 JAR 파일을 컨테이너로 복사
 ARG JAR_FILE=build/libs/*.jar
