@@ -19,12 +19,17 @@ COPY gradle/ ./gradle/
 # 프로젝트 소스 복사
 COPY src/ ./src/
 
-# Gradle 빌드 실행
+# Gradle 빌드 실행 (테스트 건너뛰기)
 RUN ./gradlew build -x test
 
 # 애플리케이션 JAR 파일을 컨테이너로 복사
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
+
+# 환경 변수 설정
+ENV SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+ENV SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+ENV SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
 
 # 애플리케이션 실행
 ENTRYPOINT ["java", "-jar", "/app.jar"]
